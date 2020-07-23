@@ -2,14 +2,14 @@
 class Walker {
     constructor(pos) {
         this.color = getRandomColor()
-        this.pos = createVector(width/2,height/3,random(50))
+        this.pos = createVector(width/2,height/3)//pos
         this.counterClockwise = random([true, false])
         this.vel = createVector(0, 10)
         this.maxVel = 150
         this.minVel = 10
         this.velDecreaseRate = 1.5
         this.clockWise = random([true,false])
-        this.maxMass = random(1) > 0.75? random(3): random(1.5)
+        this.maxMass = 1
         this.mass = random(1, this.maxMass)
     }
 
@@ -23,13 +23,15 @@ class Walker {
     }
 
     draw() {
-        const colorCenter = createVector(width/2,height/2)
+        const colorCenter = createVector(width/2,0)
         const xDist =  this.pos.x > colorCenter.x? this.pos.x-colorCenter.x:colorCenter.x-this.pos.x
         const yDist =  this.pos.y > colorCenter.y? this.pos.y-colorCenter.y:colorCenter.y-this.pos.y
         const zDist =  this.pos.z > colorCenter.z? this.pos.z-colorCenter.z:colorCenter.z-this.pos.z
         const b = map(xDist, 0, width, 255, 0)
-        const g = map(yDist, 0, height, 255, 0)
-        const r = map(zDist, 0, 1, 255, 0)
+        //const g = map(yDist, 0, height, 255, 0)
+        //const r = map(zDist, 0, 1, 255, 0)
+        const g = 0
+        const r = 0
         fill(r,g,b)
         noStroke()
         ellipse( + this.pos.x - this.size() / 2, offSet.y + this.pos.y, this.size(), this.size())
@@ -45,10 +47,9 @@ class Walker {
 
     update() {
         this.updateVelocity()
-        this.clockWise = this.pos.x > width/2 || this.pos.y > height/1.5 || this.pos.y < height/10
+        this.clockWise = this.pos.x > width/2 || this.pos.y > height/2
+        const rotation = this.clockWise ? 85:360-85
 
-        const rotV = 85
-        const rotation = this.clockWise ? rotV:360-rotV
 
         const force = (9, 81 * centerMass * this.mass) / this.pos.dist(center)
         let direction = centerDirection(this.pos).mult(-1)
@@ -71,11 +72,10 @@ class Walker {
         if (this.pos.z < 20) {
             this.pos.z = 20
         }
-        if (this.pos.z > 50) {
+        if (this.pos.z > 100) {
             fill(255,0,0)
-            this.pos.z = 50
+            this.pos.z = 100
         }
-        
         if (this.pos.x > width) {
             this.pos.x = 0
         }
