@@ -3,7 +3,7 @@ class Balancer {
         this.trySettings = false
         this.meanFrameRate = 60
         this.minFrameRate = 35
-        this.maxParticles = 1000
+        this.maxParticles = 1500
         this.waitingTime = 100
     }
 
