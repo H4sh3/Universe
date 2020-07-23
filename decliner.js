@@ -12,7 +12,7 @@ class Decliner {
         }
 
         if (this.n === 255) {
-            this.up = true
+            this.up = false
         }
         if (this.n === 0) {
             this.up = true

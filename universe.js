@@ -1,25 +1,22 @@
-let walkers;
+let particles;
 let i
-let mP
 let center
 let decliner
 let stepValue
 
 let balancer
-let offSet
 let centerMass
 let userClicked
+let maxI
 
 setup = () => {
     createCanvas(window.innerWidth, window.innerHeight)
-    center = createVector((width / 2), height )
-    offSet = createVector(0, 0)
-    centerMass = 2
-    walkers = []
     angleMode(DEGREES);
-    i = 0
-    mP = false
-    background(0)
+    center = createVector((width / 2), height)
+    centerMass = 2
+    particles = []
+    maxI = 1000
+    i = random(maxI)
     userClicked = false
     decliner = new Decliner()
     balancer = new Balancer()
@@ -31,103 +28,69 @@ getRandomColor = () => {
 }
 
 draw = () => {
-    if (i % 1000) {
-        background(0, 0, 0)
+    if (i % 100) {
+        //background(0, 0, 0, 50)
     }
+    background(255)
 
-    background(0, 0, 0, 25)
-    addNewWalkers()
-
-    if (balancer.trySettings) {
-        balancer.draw()
-    } else {
-        drawWalkers()
-    }
-    updateWalkers()
-    
-    limitWalkers()
-    i += 5
-
-    i = i >= 100 ? 0 : i
-
+    addNewParticles()
+    updateParticles()
+    limitParticles()
     balancer.update()
     decliner.step()
+
+    i = i >= maxI ? 0 : i + 5
 }
 
 keyPressed = () => {
-    console.log(keyCode)
+    return;
     if (keyCode == 38) {
         print('up')
-        offSet.y -= 50
     }
     if (keyCode == 40) {
         print('down')
-        offSet.y += 50
     }
     if (keyCode == 37) {
         print('left')
-        offSet.x -= 50
     }
     if (keyCode == 39) {
         print('right')
-        offSet.x += 50
     }
-    print(offSet)
 }
 
 mouseVector = () => {
     return createVector(mouseX, mouseY)
 }
 
-addNewWalkers = () => {
-    
-    if (walkers.length < balancer.maxWalker) {
+addNewParticles = () => {
+    if (particles.length < balancer.maxParticles) {
         for (let i = 0; i < 10; i++) {
-            let w = new Walker(getPosition())
-            w.vel = createVector(random(-2, 2), random(-2, 5),random(-2, 5))
-            walkers.push(w)
+            let w = new Particle(getPosition())
+            w.vel = createVector(random(-2, 2), random(-2, 5), random(-2, 5))
+            particles.push(w)
         }
     }
 }
 
 
 getPosition = () => {
-    let pos;
-    if(i % 2 == 1){ // left
-        pos = createVector(100,height-map(i,0,100,100,height/3),124)
-    }
-    
-    if(i % 2 == 0){ // right
-        pos = createVector(width-100,height-map(i,0,100,100,height/3),124)
-    }
-    return pos
-
+    return createVector(width/2, height/2, 124)
 }
 
-updateWalkers = () => {
-    for (let w of walkers) {
+updateParticles = () => {
+    for (let w of particles) {
         w.update()
     }
-    // filter walkers that are to close to cente
-    //walkers = walkers.filter(w => w.pos.dist(getAttractionPoint()) > 20)
 }
 
-drawWalkers = () => {
-
-    for (let w of walkers) {
+drawParticles = () => {
+    for (let w of particles) {
         w.draw()
     }
-    
 }
 
-limitWalkers = () => {
-    if (walkers.length > balancer.maxWalker) {
-        walkers = walkers.slice(Math.max(walkers.length - balancer.maxWalker - 1, 1))
+limitParticles = () => {
+    if (particles.length > balancer.maxParticles) {
+        particles = particles.slice(Math.max(particles.length - balancer.maxParticles - 1, 1))
     }
-}
-
-getAttractionPoint = () => {
-    const boundary = 50
-    return createVector(width / 2, height / 2)
-    return createVector(mouseX > width - boundary || mouseX < boundary ? width / 2 : mouseX, mouseY > height - boundary || mouseY < boundary ? height / 2 : mouseY)
 }
